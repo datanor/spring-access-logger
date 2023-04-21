@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.util.List;
@@ -44,11 +45,11 @@ public class AccessLogger {
 
     public void logRequest(HttpServletRequest httpRequest) {
         requestLogProcessors.forEach(p -> p.process(httpRequest));
-        requestLogger.info("");
+        requestLogger.info("Incoming Request {}", MDC.get("AL_REQUEST_LINE"));
     }
 
     public void logResponse(HttpServletRequest httpRequest, ContentCachingResponseWrapper httpResponse, boolean isAsync) {
         responseLogProcessors.forEach(p -> p.process(httpRequest, httpResponse, isAsync));
-        responseLogger.info("");
+        responseLogger.info("Outgoing response {}", MDC.get("AL_REQUEST_LINE"));
     }
 }
